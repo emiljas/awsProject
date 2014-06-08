@@ -57,7 +57,10 @@ app.use('/users', users);
 
 //login page BEGIN
 app.get('/auth/google',
-passport.authenticate('google', {scope: "https://www.googleapis.com/auth/plus.login"}),
+passport.authenticate('google', {scope: [
+	"https://www.googleapis.com/auth/userinfo.profile",
+	"https://www.googleapis.com/auth/userinfo.email"
+]}),
 
 function(req, res) {});
 app.get('/auth/google/callback',
