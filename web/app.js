@@ -26,7 +26,9 @@ passport.use(new GoogleStrategy({
     callbackURL: authConfig.google.callbackURL
   },
   function(accessToken, refreshToken, profile, done) {
-      console.log("user", accessToken);
+      console.log("user", accessToken, refreshToken, profile);
+      console.log(done);
+      done(null, {email : profile.email});
     /*User.findOrCreate({ googleId: profile.id }, function (err, user) {
       return done(err, user);
     });*/
@@ -58,8 +60,8 @@ app.use('/users', users);
 //login page BEGIN
 app.get('/auth/google',
 passport.authenticate('google', {scope: [
-	"https://www.googleapis.com/auth/userinfo.profile",
-	"https://www.googleapis.com/auth/userinfo.email"
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email"
 ]}),
 
 function(req, res) {});
@@ -108,5 +110,10 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+//test BEGIN
+var getX = require("../services/userService");
+getX();
+//test END
 
 module.exports = app;
