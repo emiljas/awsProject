@@ -55,6 +55,26 @@ app.use(passport.session());
 app.use('/', routes);
 app.use('/users', users);
 
+//login page BEGIN
+app.get('/auth/google',
+passport.authenticate('google'),
+
+function(req, res) {});
+app.get('/auth/google/callback',
+passport.authenticate('google', {
+    failureRedirect: '/'
+}),
+function(req, res) {
+    console.log('successful auth');
+    res.redirect('/account');
+});
+
+app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+});
+//login page END
+
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
@@ -85,25 +105,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-//login page BEGIN
-app.get('/auth/google',
-passport.authenticate('google'),
-
-function(req, res) {});
-app.get('/auth/google/callback',
-passport.authenticate('google', {
-    failureRedirect: '/'
-}),
-function(req, res) {
-    console.log('successful auth');
-    res.redirect('/account');
-});
-
-app.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-});
-//login page END
 
 module.exports = app;
