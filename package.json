@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./web/bin/www"
   },
   "dependencies": {
     "express": "~4.2.0",
@@ -16,7 +16,6 @@
     "aws-sdk": "~2.0.0",
     "passport": "~0.2.0",
     "passport-google-oauth": "~0.1.5",
-    "node-mysql": "~0.3.7",
     "mysql": "~2.3.2"
   }
 }

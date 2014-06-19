@@ -9,9 +9,12 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 //google auth BEGIN
-var authConfig = require('./oauth.js')
-var passport = require('passport')
+var authConfig = require('./oauth.js');
+var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var UserService = require("../services/UserService");
+
+var userService = new UserService();
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -24,16 +27,17 @@ passport.use(new GoogleStrategy({
     clientID: authConfig.google.clientID,
     clientSecret: authConfig.google.clientSecret,
     callbackURL: authConfig.google.callbackURL
-  },
-  function(accessToken, refreshToken, profile, done) {
-      console.log("user", accessToken, refreshToken, profile);
-      console.log(done);
-      done(null, {email : profile.email});
-    /*User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return done(err, user);
-    });*/
-  }
-));
+},
+
+function(accessToken, refreshToken, profile, done) {
+    console.log('before');
+    var googleId = JSON.parse(profile).id;
+    console.log('after');
+    console.log(googleId);
+    userService.findByGoogleIdOrCreate(googleId, function(user) {
+        return done(null, user);
+    });
+}));
 //google auth END
 
 var app = express();
@@ -110,10 +114,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-//test BEGIN
-var getX = require("../services/userService");
-getX();
-//test END
 
 module.exports = app;
