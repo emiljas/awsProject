@@ -3,10 +3,12 @@ var path = require('path');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var account = require('./routes/account');
 
 //google auth BEGIN
 var authConfig = require('./oauth-config.js');
@@ -17,30 +19,35 @@ var UserService = require("../services/UserService");
 var userService = new UserService();
 
 passport.serializeUser(function(user, done) {
+    console.log('serializeUser', user);
     done(null, user);
 });
 passport.deserializeUser(function(user, done) {
+    console.log('deserializeUser', user);
     done(null, user);
 });
 
 passport.use(new GoogleStrategy({
     clientID: authConfig.google.clientID,
     clientSecret: authConfig.google.clientSecret,
-    callbackURL: authConfig.google.callbackURL
+    callbackURL: authConfig.google.callbackURL,
+    passReqToCallback: true
 },
 
-function(accessToken, refreshToken, profile, done) {
-    //TODO: delete access and refresh token if useless
-    var googleUser = {
-        id: profile.id,
-        accessToken: accessToken,
-        refreshToken: refreshToken,
-        displayName: profile.displayName,
-        email: profile.emails[0].value
-    };
-
-    userService.findGoogleUserOrCreate(googleUser, function(user) {
-        return done(null, user);
+function(req, accessToken, refreshToken, profile, done) {
+    process.nextTick(function(){
+        //TODO: delete access and refresh token if useless
+        var googleUser = {
+            id: profile.id,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            displayName: profile.displayName,
+            email: profile.emails[0].value
+        };
+    
+        userService.findGoogleUserOrCreate(googleUser, function(user) {
+            return done(null, user);
+        });
     });
 }));
 //google auth END
@@ -51,12 +58,15 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+    secret: 'dgfdfg'
+}));
 
 //passport BEGIN
 app.use(passport.initialize());
@@ -65,11 +75,13 @@ app.use(passport.session());
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/account', account);
 
 //login page BEGIN
 app.get('/auth/google',
 passport.authenticate('google', {
-    scope: ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"]
+    scope: ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"],
+    session: true
 }),
 
 function(req, res) {});

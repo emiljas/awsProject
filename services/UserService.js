@@ -5,6 +5,8 @@ function UserService() {
 }
 
 UserService.prototype.findGoogleUserOrCreate = function(googleUser, callback) {
+    console.log('find user or create');
+    
     this.findUserByGoogleId(googleUser.id, function(user) {
         if (user === null) {
             this.createGoogleUser(googleUser, function() {

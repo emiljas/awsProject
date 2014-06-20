@@ -6,12 +6,12 @@ UserRepository.prototype = new MySqlRepository();
 
 UserRepository.prototype.findByGoogleId = function(id, callback) {
     var sql = 
-        'select u.id, u.email\
-        from User u\
-        join GoogleUser gu on gu.userId = u.id\
-        where gu.id = :id';
+        'select u.id, u.email, gu.id as googleId' +
+        ' from User u' +
+        ' join GoogleUser gu on gu.userId = u.id' +
+        ' where gu.id = :id';
     
-    var query =this.formatQuery(sql, { id : id });
+    var query = this.formatQuery(sql, { id : id });
     
     this.query(query, function processResult(rows) {
         if (rows.length === 0)
@@ -20,9 +20,9 @@ UserRepository.prototype.findByGoogleId = function(id, callback) {
             var row = rows[0];
 
             callback({
-                id: row[0],
-                email: row[1],
-                googleId: row[2]
+                id: row.id,
+                email: row.email,
+                googleId: row.googleId
             });
         }
         else
@@ -44,11 +44,7 @@ UserRepository.prototype.createGoogleUser = function(user, callback) {
     };
     
     var query = this.formatQuery(sql, values);
-    console.log(query);
-    
-    this.query(query, function() {
-        callback();
-    });
+    this.query(query, callback);
 };
 
 module.exports = UserRepository;
