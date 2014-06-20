@@ -9,7 +9,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 
 //google auth BEGIN
-var authConfig = require('./oauth.js');
+var authConfig = require('./oauth-config.js');
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var UserService = require("../services/UserService");
@@ -30,11 +30,16 @@ passport.use(new GoogleStrategy({
 },
 
 function(accessToken, refreshToken, profile, done) {
-    console.log('before');
-    var googleId = JSON.parse(profile).id;
-    console.log('after');
-    console.log(googleId);
-    userService.findByGoogleIdOrCreate(googleId, function(user) {
+    //TODO: delete access and refresh token if useless
+    var googleUser = {
+        id : profile.id,
+        accessToken : accessToken,
+        refreshToken : refreshToken,
+        displayName : profile.displayName,
+        email : profile.emails[0].value
+    };
+    
+    userService.findGoogleUserOrCreate(googleUser, function(user) {
         return done(null, user);
     });
 }));

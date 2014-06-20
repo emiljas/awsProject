@@ -4,21 +4,22 @@ function UserService() {
     this.userRepository = new UserRepository();
 }
 
-UserService.prototype.findByGoogleIdOrCreate = function(user, callback) {
-    var afterCreateUser = function() {
-        this.userRepository.findByGoogleId(user.googleId, function(googleUser) {
-            callback(googleUser);
-        });
-    };
+UserService.prototype.findGoogleUserOrCreate = function(googleUser, callback) {
+    var user = this.findUserByGoogleId(googleUser.id, callback);
     
-    var userNotExists = function() {
-        this.userRepository.createUser(user, afterCreateUser);
-    };
-    
-    this.userRepository.findByGoogleId(user.googleId, function(googleUser) {
-        if (googleUser === null) userNotExists();
-        else callback(googleUser);
-    });
+    if(user === null) {
+        this.createGoogleUser(googleUser, function(){
+            this.findUserByGoogleId(googleUser.id);
+        }.bind(this));
+    }
+};
+
+UserService.prototype.createGoogleUser = function(googleUser, callback) {
+    this.userRepository.createGoogleUser(googleUser, callback);
+};
+
+UserService.prototype.findUserByGoogleId = function(googleId, callback) {
+    this.userRepository.findByGoogleId(googleId, callback);
 };
 
 module.exports = UserService;

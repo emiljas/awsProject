@@ -16,6 +16,9 @@ coverage
 # Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
+# cloud9
+.c9
+
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
@@ -25,5 +28,4 @@ build/Release
 node_modules
 
 config.json
-oauth.js
-mysqlConfig.js
+*-config.js

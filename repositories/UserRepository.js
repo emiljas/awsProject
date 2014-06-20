@@ -4,11 +4,19 @@ function UserRepository() {}
 
 UserRepository.prototype = new MySqlRepository();
 
-UserRepository.prototype.findByGoogleId = function(googleId, callback) {
-    var query = 'select top 1 id, email, googleId from User where googleId = ' + googleId;
-    this.query(query, function(rows) {
-        if (rows.length === 0) callback(null);
-        else {
+UserRepository.prototype.findByGoogleId = function(id, callback) {
+    var sql = 
+        'select u.id, u.email\
+        from User u\
+        join GoogleUser gu on gu.userId = u.id\
+        where gu.id = :id';
+    
+    var query =this.formatQuery(sql, { id : id });
+    
+    this.query(query, function processResult(rows) {
+        if (rows.length === 0)
+            callback(null);
+        else if(rows.length == 1) {
             var row = rows[0];
 
             callback({
@@ -17,6 +25,27 @@ UserRepository.prototype.findByGoogleId = function(googleId, callback) {
                 googleId: row[2]
             });
         }
+        else
+            throw new Error("duplicate googleId");
+    });
+};
+
+UserRepository.prototype.createGoogleUser = function(user, callback) {
+    var sql =
+        "insert into User(displayName, email,)\
+        values(:displayName, :email);\
+        insert into GoogleUser(id, userId)\
+        values(:id, last_insert_id());";
+    
+    var values = {
+        displayName : user.displayName,
+        email : user.email
+    };
+    
+    var query = this.formatQuery(sql, values);
+    
+    this.query(query, function() {
+        callback();
     });
 };
 
