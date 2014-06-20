@@ -5,13 +5,15 @@ function UserService() {
 }
 
 UserService.prototype.findGoogleUserOrCreate = function(googleUser, callback) {
-    var user = this.findUserByGoogleId(googleUser.id, callback);
-    
-    if(user === null) {
-        this.createGoogleUser(googleUser, function(){
-            this.findUserByGoogleId(googleUser.id);
-        }.bind(this));
-    }
+    this.findUserByGoogleId(googleUser.id, function(user) {
+        if (user === null) {
+            this.createGoogleUser(googleUser, function() {
+                this.findUserByGoogleId(googleUser.id, callback);
+            }.bind(this));
+        }
+        else
+            callback(user);
+    }.bind(this));
 };
 
 UserService.prototype.createGoogleUser = function(googleUser, callback) {

@@ -32,13 +32,13 @@ passport.use(new GoogleStrategy({
 function(accessToken, refreshToken, profile, done) {
     //TODO: delete access and refresh token if useless
     var googleUser = {
-        id : profile.id,
-        accessToken : accessToken,
-        refreshToken : refreshToken,
-        displayName : profile.displayName,
-        email : profile.emails[0].value
+        id: profile.id,
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        displayName: profile.displayName,
+        email: profile.emails[0].value
     };
-    
+
     userService.findGoogleUserOrCreate(googleUser, function(user) {
         return done(null, user);
     });
@@ -68,16 +68,16 @@ app.use('/users', users);
 
 //login page BEGIN
 app.get('/auth/google',
-passport.authenticate('google', {scope: [
-        "https://www.googleapis.com/auth/userinfo.profile",
-        "https://www.googleapis.com/auth/userinfo.email"
-]}),
+passport.authenticate('google', {
+    scope: ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"]
+}),
 
 function(req, res) {});
 app.get('/auth/google/callback',
 passport.authenticate('google', {
     failureRedirect: '/'
 }),
+
 function(req, res) {
     console.log('successful auth');
     res.redirect('/account');

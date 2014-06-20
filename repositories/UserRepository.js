@@ -32,17 +32,19 @@ UserRepository.prototype.findByGoogleId = function(id, callback) {
 
 UserRepository.prototype.createGoogleUser = function(user, callback) {
     var sql =
-        "insert into User(displayName, email,)\
-        values(:displayName, :email);\
-        insert into GoogleUser(id, userId)\
-        values(:id, last_insert_id());";
+        "insert into User(displayName, email)" +
+        " values(:displayName, :email);" +
+        "insert into GoogleUser(id, userId)" +
+        " values(:id, last_insert_id());";
     
     var values = {
+        id: user.id,
         displayName : user.displayName,
         email : user.email
     };
     
     var query = this.formatQuery(sql, values);
+    console.log(query);
     
     this.query(query, function() {
         callback();
