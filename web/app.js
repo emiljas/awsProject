@@ -6,9 +6,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var account = require('./routes/account');
+var index = require('./routes/index');
 
 var app = express();
 
@@ -32,9 +30,7 @@ app.use(session({
 }));
 passportAuth.init();
 
-app.use('/', routes);
-app.use('/users', users);
-app.use('/account', account);
+app.use('/', index);
 passportAuth.configUrls();
 
 /// catch 404 and forward to error handler

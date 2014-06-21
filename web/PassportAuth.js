@@ -13,11 +13,9 @@ var PassportAuth = function(app) {
     
     this.config = function() {
         passport.serializeUser(function(user, done) {
-            console.log('serializeUser', user);
             done(null, user);
         });
         passport.deserializeUser(function(user, done) {
-            console.log('deserializeUser', user);
             done(null, user);
         });
         
@@ -66,8 +64,7 @@ var PassportAuth = function(app) {
         }),
         
         function(req, res) {
-            console.log('successful auth');
-            res.redirect('/account');
+            res.redirect('/');
         });
         
         app.get('/logout', function(req, res) {
