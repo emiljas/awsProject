@@ -10,9 +10,12 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var account = require('./routes/account');
 
+var appConfig = require("./app-config.js");
+
+var passportAuth = require("./passportAuth.js");
+
 //google auth BEGIN
 var authConfig = require('./oauth-config.js');
-var appConfig = require("./app-config.js");
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var UserService = require("../services/UserService");
@@ -66,7 +69,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(session({
-    secret: 'dgfdfg'
+    secret: appConfig.sessionSecret
 }));
 
 //passport BEGIN
