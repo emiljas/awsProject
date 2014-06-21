@@ -12,6 +12,7 @@ var account = require('./routes/account');
 
 //google auth BEGIN
 var authConfig = require('./oauth-config.js');
+var appConfig = require("./app-config.js");
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var UserService = require("../services/UserService");

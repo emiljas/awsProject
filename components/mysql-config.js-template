@@ -1,0 +1,11 @@
+var mysqlConfig = {
+    host: 'emilmysql.cfzrxkls1ilf.us-west-2.rds.amazonaws.com',
+    database: 'emilMySql',
+    user: '',
+    password: '',
+    port: '3306',
+    connectionLimit: 10,
+    multipleStatements: true
+};
+
+module.exports = mysqlConfig;
