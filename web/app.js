@@ -10,53 +10,12 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var account = require('./routes/account');
 
-var appConfig = require("./app-config.js");
-
-var passportAuth = require("./passportAuth.js");
-
-//google auth BEGIN
-var authConfig = require('./oauth-config.js');
-var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-var UserService = require("../services/UserService");
-
-var userService = new UserService();
-
-passport.serializeUser(function(user, done) {
-    console.log('serializeUser', user);
-    done(null, user);
-});
-passport.deserializeUser(function(user, done) {
-    console.log('deserializeUser', user);
-    done(null, user);
-});
-
-passport.use(new GoogleStrategy({
-    clientID: authConfig.google.clientID,
-    clientSecret: authConfig.google.clientSecret,
-    callbackURL: authConfig.google.callbackURL,
-    passReqToCallback: true
-},
-
-function(req, accessToken, refreshToken, profile, done) {
-    process.nextTick(function(){
-        //TODO: delete access and refresh token if useless
-        var googleUser = {
-            id: profile.id,
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-            displayName: profile.displayName,
-            email: profile.emails[0].value
-        };
-    
-        userService.findGoogleUserOrCreate(googleUser, function(user) {
-            return done(null, user);
-        });
-    });
-}));
-//google auth END
-
 var app = express();
+
+var appConfig = require("./app-config.js");
+var PassportAuth = require("./PassportAuth.js");
+
+var passportAuth = new PassportAuth(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -71,39 +30,12 @@ app.use(cookieParser());
 app.use(session({
     secret: appConfig.sessionSecret
 }));
-
-//passport BEGIN
-app.use(passport.initialize());
-app.use(passport.session());
-//passport END
+passportAuth.init();
 
 app.use('/', routes);
 app.use('/users', users);
 app.use('/account', account);
-
-//login page BEGIN
-app.get('/auth/google',
-passport.authenticate('google', {
-    scope: ["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"],
-    session: true
-}),
-
-function(req, res) {});
-app.get('/auth/google/callback',
-passport.authenticate('google', {
-    failureRedirect: '/'
-}),
-
-function(req, res) {
-    console.log('successful auth');
-    res.redirect('/account');
-});
-
-app.get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-});
-//login page END
+passportAuth.configUrls();
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
