@@ -1,2 +1,4 @@
 -use browserify
 -move query string processing from web/public/filter.js
+-not use bind(this) in prototypes
+-move aws sqs address from SQSController
