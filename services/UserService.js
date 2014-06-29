@@ -26,4 +26,8 @@ UserService.prototype.findUserByGoogleId = function(googleId, callback) {
     this.userRepository.findByGoogleId(googleId, callback);
 };
 
+UserService.prototype.updateAccessToken = function(googleId, accessToken, callback) {
+    this.userRepository.updateAccessToken(googleId, accessToken, callback);
+};
+
 module.exports = UserService;

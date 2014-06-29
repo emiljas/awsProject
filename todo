@@ -1,0 +1,2 @@
+-use browserify
+-move query string processing from web/public/filter.js

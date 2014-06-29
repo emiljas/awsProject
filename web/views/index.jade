@@ -1,4 +1,9 @@
 extends layout
 
 block content
-    p jk
+    if albums
+        p albums:
+            ul
+            -for(var i = 0; i < albums.items.length; i++)
+                li
+                    a(href="/album?id=#{albums.items[i].id}") #{albums.items[i].title}

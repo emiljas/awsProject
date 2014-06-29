@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    div
+        div(class="horizontalHalfOfScreen center")
+            img(src="#{pictureBefore}")
+        div(class="horizontalHalfOfScreen center")
+            -if(pictureAfter)
+                img(src="#{pictureAfter}")
+            -else
+                button(id="btnProcessPicture") process picture
+                
+    script(src="/javascripts/filter.js")

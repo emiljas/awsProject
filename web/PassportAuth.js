@@ -31,7 +31,6 @@ var PassportAuth = function(app) {
         },
         
         function(req, accessToken, refreshToken, profile, done) {
-            //TODO: delete access and refresh token if useless
             var googleUser = {
                 id: profile.id,
                 accessToken: accessToken,
@@ -41,7 +40,13 @@ var PassportAuth = function(app) {
             };
         
             userService.findGoogleUserOrCreate(googleUser, function(user) {
-                return done(null, user);
+                if(user.accessToken != accessToken)
+                    userService.updateAccessToken(user.googleId, accessToken, function() {
+                        user.accessToken = accessToken;
+                        done(null, user);
+                    });
+                else
+                    done(null, user);
             });
         }));
     };
@@ -52,7 +57,8 @@ var PassportAuth = function(app) {
             scope:
             [
                 "https://www.googleapis.com/auth/userinfo.profile",
-                "https://www.googleapis.com/auth/userinfo.email"
+                "https://www.googleapis.com/auth/userinfo.email",
+                "https://picasaweb.google.com/data/"
             ],
             session: true
         }),

@@ -1,12 +1,13 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    if user
-      p #{user.email} 
-        a(href='/logout') sign out
-    else
-      a(href='/auth/google') sign in with google
-    block content
+    head
+        title= title
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        script(src="https://code.jquery.com/jquery-2.1.1.min.js")
+    body
+        if user
+            p #{user.email} 
+                a(href='/logout') sign out
+        else
+            a(href='/auth/google') sign in with google
+        block content

@@ -1,0 +1,13 @@
+extends layout
+
+block content
+    if pictures
+        div
+            p pictures:
+            table
+                -for(var i = 0; i < pictures.length; ++i)
+                    tr
+                        td
+                            img(src="#{pictures[i].src}")
+                        td
+                            a(href="#{pictures[i].href}") apply filter
