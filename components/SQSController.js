@@ -36,18 +36,23 @@ SQSController.prototype.deleteMessage = function(message) {
 
 SQSController.prototype.sendMessage = function(messageBody, done) {
     console.log('sendMessage', 'start');
-    
-    sqsClient.sendMessage({
-        MessageBody: messageBody,
-        QueueUrl: sqsQueueUrl
-    }, function(err, data) {
-        console.log(err, data);
-        
-        if (err)
-            throw new Error(err);
-        else
-            done(data);
-    });
+    try {
+        console.log(new AWS.SQS(), new AWS.SQS().client);
+        sqsClient.sendMessage({
+            MessageBody: messageBody,
+            QueueUrl: sqsQueueUrl
+        }, function(err, data) {
+            console.log(err, data);
+            
+            if (err)
+                throw new Error(err);
+            else
+                done(data);
+        });
+    }
+    catch(e) {
+        console.log(e);
+    }
 };
 
 module.exports = SQSController;
