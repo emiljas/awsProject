@@ -1,8 +1,7 @@
-var SQSController = require("../components/SQSController.js");
+var PictureSQSController = require('../components/PictureSQSController.js');
 
 function PictureService() {
-    this.pictureSQSController = new SQSController();
-    
+    this.pictureSQSController = new PictureSQSController();
 }
 
 PictureService.prototype.addPictureToProcessingQueue = function(albumId, pictureId, done) {
@@ -10,8 +9,6 @@ PictureService.prototype.addPictureToProcessingQueue = function(albumId, picture
         albumId: albumId,
         pictureId: pictureId
     });
-    
-    message = 'as';
     this.pictureSQSController.sendMessage(message, done);
 };
 

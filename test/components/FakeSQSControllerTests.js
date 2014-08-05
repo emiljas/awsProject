@@ -30,4 +30,16 @@ describe('FakeSQSController', function() {
         });    
     });
 
+    it('send message to correct queue', function(done) {
+        var fake1 = new FakeSQSController('http://first-queue');
+        var fake2 = new FakeSQSController('http://second-queue');
+
+        fake1.sendMessage('message to first queue', function() {
+            fake2.sendMessage('message to second queue', function() {
+                expect(fake1.getMessageLength()).to.equal(1);
+                expect(fake1.getMessageLength()).to.equal(1);
+                done();
+            });
+        });            
+    });
  }); 
