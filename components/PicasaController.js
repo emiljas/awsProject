@@ -64,8 +64,8 @@ var PicasaController = function(accessToken) {
             
             var picture = {
                 id: entry["gphoto:id"],
-                thumbnail: group["media:thumbnail"][2]['$'],
-                main: group["media:content"][0]['$']
+                thumbnail: group["media:thumbnail"][2].$,
+                main: group["media:content"][0].$
             };
             pictures.items.push(picture);
         }
@@ -76,7 +76,7 @@ var PicasaController = function(accessToken) {
     this.parsePicture = function(rawData) {
         var picture = {};
         var group = rawData.feed['media:group'][0];
-        var content = group['media:content'][0]['$'];
+        var content = group['media:content'][0].$;
         
         picture.url = content.url;
         

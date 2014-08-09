@@ -1,4 +1,4 @@
-var waitTimeInMilliseconds = 0;
+var waitTimeInMilliseconds = 1000;
 
 var fun = function() {
     var x = Math.random();
