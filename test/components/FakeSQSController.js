@@ -1,33 +1,49 @@
-function FakeSQSController(address) {
-    this.address = address;
+var fs = require("fs");
 
-    if(this.getQueue() === undefined)
-        this.initQueue();
+function FakeSQSController(address) {
+    var tmpFileName = '/tmp/' + address.replace(/[\/:.-]/g, '_');
+
+    this.getMessageLength = function() {
+        return getQueue().length;
+    };
+
+    this.readMessage = function(done) {
+        var queue = getQueue();
+        var lastMessage;
+        if(queue.length === 0)
+            lastMessage = null;
+        else
+            lastMessage = queue.splice(0, 1)[0];
+        setQueue(queue);
+        done(null, lastMessage);
+    };
+
+    this.sendMessage = function(messageBody, done) {
+        var queue = getQueue();
+        queue.push(messageBody);
+        setQueue(queue);
+        done();
+    };
+
+        function getQueue() {
+            var exists = fs.existsSync(tmpFileName);
+            return exists ? readQueue() : [];
+        }
+
+            function readQueue() {
+                var data = fs.readFileSync(tmpFileName, 'utf8');
+                return JSON.parse(data);
+            }
+
+    this.emptyQueue = function() {
+        setQueue([]);
+    };
+
+        function setQueue(queue) {
+            var data = JSON.stringify(queue);
+            fs.writeFileSync(tmpFileName, data);
+        }
 }
 
-FakeSQSController.queues = {}; 
-
-FakeSQSController.prototype.getQueue = function() {
-    return FakeSQSController.queues[this.address];
-};
-
-FakeSQSController.prototype.initQueue = function() {
-    FakeSQSController.queues[this.address] = [];
-};
-
-FakeSQSController.prototype.getMessageLength = function() {
-    return this.getQueue().length;
-};
-
-FakeSQSController.prototype.readMessage = function(done) {
-    var lastMessage = this.getQueue()[0];
-    this.getQueue().splice(0, 1);
-    done(null, lastMessage);     
-};
-
-FakeSQSController.prototype.sendMessage = function(messageBody, done) {
-    this.getQueue().push(messageBody); 
-    done();
-};
 
 module.exports = FakeSQSController;

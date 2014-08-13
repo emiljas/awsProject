@@ -2,44 +2,66 @@ var expect = require('expect.js');
 var FakeSQSController = require('./FakeSQSController.js');
 
 describe('FakeSQSController', function() {
-   it('send message and then read in correct order', function(done) {
-        var fake = new FakeSQSController('http://test2-queue.com');
+    it('return null body if queue is empty', function(done) {
+        var fake = new FakeSQSController('http://empty-queue.com');
+        fake.readMessage(function(message, body) {
+            expect(message).to.equal(null);
+            expect(body).to.equal(null);
+            done();
+        });
+    });
 
-        fake.sendMessage('a', function() {
+    it('send message and then read in correct order', function(done) {
+        var fake = new FakeSQSController('http://correct-order-queue.com');
 
-            expect(fake.getMessageLength()).to.equal(1);
+        try {
+            fake.sendMessage('a', function() {
 
-            fake.sendMessage('b', function() {
+                expect(fake.getMessageLength()).to.equal(1);
 
-                expect(fake.getMessageLength()).to.equal(2);
+                fake.sendMessage('b', function() {
 
-                fake.readMessage(function(message, body) {
-                    
-                    expect(body).to.equal('a');  
-                    expect(fake.getMessageLength()).to.equal(1);
+                    expect(fake.getMessageLength()).to.equal(2);
 
                     fake.readMessage(function(message, body) {
+                        
+                        expect(body).to.equal('a');  
+                        expect(fake.getMessageLength()).to.equal(1);
 
-                        expect(body).to.equal('b');
-                        expect(fake.getMessageLength()).to.equal(0);
-                        done();
+                        fake.readMessage(function(message, body) {
 
-                    });
-                }); 
-            });
-        });    
+                            expect(body).to.equal('b');
+                            expect(fake.getMessageLength()).to.equal(0);
+
+                            done();
+
+                        });
+                    }); 
+                });
+            });    
+        }
+        finally {
+            fake.emptyQueue();
+        }
     });
 
     it('send message to correct queue', function(done) {
         var fake1 = new FakeSQSController('http://first-queue');
         var fake2 = new FakeSQSController('http://second-queue');
 
-        fake1.sendMessage('message to first queue', function() {
-            fake2.sendMessage('message to second queue', function() {
-                expect(fake1.getMessageLength()).to.equal(1);
-                expect(fake1.getMessageLength()).to.equal(1);
-                done();
-            });
-        });            
+        try {
+            fake1.sendMessage('message to first queue', function() {
+                fake2.sendMessage('message to second queue', function() {
+                    expect(fake1.getMessageLength()).to.equal(1);
+                    expect(fake2.getMessageLength()).to.equal(1);
+
+                    done();
+                });
+            });            
+        }
+        finally {
+            fake1.emptyQueue();
+            fake2.emptyQueue();
+        }
     });
- }); 
+}); 

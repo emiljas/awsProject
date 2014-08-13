@@ -22,6 +22,6 @@ describe('ProgressIndicator', function() {
             expect(animations[3]).to.equal("wait for processing *&nbsp&nbsp");
             expect(animations[4]).to.equal("wait for processing **&nbsp");
             done();
-        }, 50);
+        }, 150);
     });
 });

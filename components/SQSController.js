@@ -25,6 +25,8 @@ SQSController.prototype.readMessage = function(done) {
             done(message, body);
             this.deleteMessage(message);
         }
+        else
+            done(null, null);
     }.bind(this));
 };
 

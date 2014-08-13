@@ -10,7 +10,7 @@ router.get('/', function(req, res) {
     var albumId = query.albumId;
     var pictureId = query.pictureId;
     
-    pictureService.addPictureToProcessingQueue(albumId, pictureId, function() {
+    pictureService.sendPictureToProcessingQueue(albumId, pictureId, function() {
         res.send('success');
     });
 });
