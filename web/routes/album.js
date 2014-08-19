@@ -1,14 +1,14 @@
 var express = require('express');
 var router = express.Router();
 var url = require('url');
-var PicasaController = require("../../components/PicasaController.js");
+var PicasaClient = require("../../components/PicasaClient.js");
 
 router.get('/', function(req, res) {
     var query = url.parse(req.url, true).query;
     var albumId = query.id;
     
-    var picasaController = new PicasaController(req.user.accessToken);
-    picasaController.getPictures(albumId, function(pictures) {
+    var picasaClient = new PicasaClient(req.user.accessToken);
+    picasaClient.getPictures(albumId, function(pictures) {
         var viewModel = [];
         for(var i = 0; i < pictures.items.length; ++i) {
             var picture = pictures.items[i];

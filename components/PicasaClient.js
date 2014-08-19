@@ -2,9 +2,9 @@ var http = require("http");
 var https = require("https");
 var parseString = require('xml2js').parseString;
 
-var PicasaController = function(accessToken) {
+var PicasaClient = function(accessToken) {
     this.accessToken = accessToken;
-    
+
     this.getResult = function(options, done)
     {
         var prot = options.port == 443 ? https : http;
@@ -74,13 +74,14 @@ var PicasaController = function(accessToken) {
     };
     
     this.parsePicture = function(rawData) {
-        var picture = {};
         var group = rawData.feed['media:group'][0];
         var content = group['media:content'][0].$;
-        
-        picture.url = content.url;
-        
-        return picture;
+        var fileName = group['media:title'][0]._;
+
+        return {
+            url: content.url,
+            fileName: fileName
+        };
     };
     
     this.generateOptions = function(path) {
@@ -96,8 +97,8 @@ var PicasaController = function(accessToken) {
     };
 };
 
-PicasaController.prototype.getAlbums = function(done) {
-    var options = this.generateOptions('/data/feed/api/user/emiljasinski');
+PicasaClient.prototype.getAlbums = function(done) {
+    var options = this.generateOptions('/data/feed/api/user/default/');
     
     this.getResult(options, function(statusCode, result) {
         this.parseXml(result, function(rawData) {
@@ -106,7 +107,7 @@ PicasaController.prototype.getAlbums = function(done) {
     }.bind(this));
 };
 
-PicasaController.prototype.getPictures = function(albumId, done) {
+PicasaClient.prototype.getPictures = function(albumId, done) {
     var options = this.generateOptions('/data/feed/api/user/default/albumid/' + albumId);
     
     this.getResult(options, function(statusCode, result) {
@@ -116,7 +117,7 @@ PicasaController.prototype.getPictures = function(albumId, done) {
     }.bind(this));
 };
 
-PicasaController.prototype.getPicture = function(albumId, pictureId, done) {
+PicasaClient.prototype.getPicture = function(albumId, pictureId, done) {
     var path = '/data/feed/api/user/default/albumid/' + albumId + "/photoid/" + pictureId;
     var options = this.generateOptions(path);
     
@@ -127,4 +128,4 @@ PicasaController.prototype.getPicture = function(albumId, pictureId, done) {
     }.bind(this));
 };
 
-module.exports = PicasaController;
+module.exports = PicasaClient;

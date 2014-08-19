@@ -1,11 +1,11 @@
 var express = require('express');
 var router = express.Router();
-var PicasaController = require("../../components/PicasaController.js");
+var PicasaClient = require("../../components/PicasaClient.js");
 
 router.get('/', function(req, res) {
     if(req.user) {
-        var picasaController = new PicasaController(req.user.accessToken);
-        picasaController.getAlbums(function(albums) {
+        var picasaClient = new PicasaClient(req.user.accessToken);
+        picasaClient.getAlbums(function(albums) {
             res.render('index', {
                 user: req.user,
                 albums: albums

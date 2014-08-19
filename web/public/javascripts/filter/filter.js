@@ -17,7 +17,6 @@ $btnProcessPicture.click(function(){
             console.log(arguments);
         }
     }).done(function(data) {
-        console.log(data === "success", data);
         if(data === "success") {
             var progressIndicator = new ProgressIndicator({
                 waitForProcessingMessage: "please wait while processing",

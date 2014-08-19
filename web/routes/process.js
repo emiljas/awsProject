@@ -7,10 +7,13 @@ router.get('/', function(req, res) {
     var query = url.parse(req.url, true).query;
     var pictureService = new PictureService();
 
-    var albumId = query.albumId;
-    var pictureId = query.pictureId;
-    
-    pictureService.sendPictureToProcessingQueue(albumId, pictureId, function() {
+    var info = {
+    	accessToken: req.user.accessToken,
+    	albumId: query.albumId,
+    	pictureId: query.pictureId
+    };
+    pictureService.sendPictureToProcessingQueue(info, function() {
+        
         res.send('success');
     });
 });
