@@ -1,5 +1,5 @@
 var appConfig = {
-    sessionSecret: ''
+    sessionSecret: 'FILL_IN'
 };
 
 module.exports = appConfig;

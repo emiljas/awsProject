@@ -1,0 +1,4 @@
+module.export = {
+	"accessKeyId": "FILL_IN",
+ 	"secretAccessKey": "FILL_IN"
+};

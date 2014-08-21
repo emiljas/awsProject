@@ -1,9 +1,9 @@
 var oauthConfig = {
     google: {
-        clientID: "",
-        clientSecret: "",
+        clientID: "FILL_IN",
+        clientSecret: "FILL_IN",
         callbackURL: "host/auth/google/callback"
     }
 };
 
-module.exports = authConfig;
+module.exports = oauthConfig;
