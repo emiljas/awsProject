@@ -22,7 +22,8 @@ function FakeSQSController(address) {
         var queue = getQueue();
         queue.push(messageBody);
         setQueue(queue);
-        done();
+        if(done)
+            done();
     };
 
         function getQueue() {

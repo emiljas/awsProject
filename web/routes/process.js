@@ -12,9 +12,12 @@ router.get('/', function(req, res) {
     	albumId: query.albumId,
     	pictureId: query.pictureId
     };
-    pictureService.sendPictureToProcessingQueue(info, function() {
-        
-        res.send('success');
+    pictureService.sendPictureToProcessingQueue(info, function(picture) {
+        var result = {
+            success: true,
+            pictureUrl: pictureService.generatePictureUrl(picture)
+        };
+        res.send(JSON.stringify(result));
     });
 });
 

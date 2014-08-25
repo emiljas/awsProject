@@ -4,8 +4,9 @@ block content
     div
         div(class="horizontalHalfOfScreen center")
             img(src="#{pictureBefore}")
-        div(class="horizontalHalfOfScreen center")
+        div(class="horizontalHalfOfScreen center" id="afterProcessedDiv")
             -if(pictureAfter)
                 img(src="#{pictureAfter}")
             -else
                 button(id="btnProcessPicture") process picture
+

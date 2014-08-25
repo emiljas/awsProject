@@ -1,6 +1,7 @@
 var s3 = require('s3');
 var Uploader = require('s3-streaming-upload').Uploader;
 var awsS3Options = require('./aws-s3-config.js');
+var makePath = require('../utils/PathUtils.js').makePath; 
 
 var client = s3.createClient({
 	s3Options: awsS3Options
@@ -15,7 +16,10 @@ function S3Client(bucket) {
 			accessKey: awsS3Options.accessKeyId,
 			secretKey: awsS3Options.secretAccessKey,
 			stream: options.stream,
-			objectName: options.objectName
+			objectName: options.objectName,
+			objectParams: {
+				ACL: 'public-read'
+			}
 		});
 
 		upload.on('completed', function(err, res) {
@@ -34,9 +38,11 @@ function S3Client(bucket) {
 		});
 	};
 
-	this.getUrl = function(key, done) {
-		var url = client.getPublicUrlHttp(this.bucket, key);
-		done(url);
+	this.getUrl = function(objectName) {
+		var url = makePath('https://s3-us-west-2.amazonaws.com',
+							this.bucket,
+							objectName);
+		return url;
 	};
 }
 

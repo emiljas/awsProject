@@ -12,9 +12,6 @@ describe('PictureService', function() {
 		fakeSQSController = new FakeSQSController(PictureService.PictureSQSAddress);
 		pictureService.injectPictureSQSController(fakeSQSController);
 		pictureService.injectPicasaClient(FakePicasaClient);
-	});
-
-	afterEach(function() {
 		fakeSQSController.emptyQueue();
 	});
 
@@ -56,6 +53,6 @@ describe('PictureService', function() {
 		};
 		var objectName = pictureService.generatePictureS3ObjectName(picture);
 
-		expect(objectName).to.equal('proccessedPictures/93/121/abc.png');
+		expect(objectName).to.equal('processedPictures/93/121/abc.png');
 	});
 });

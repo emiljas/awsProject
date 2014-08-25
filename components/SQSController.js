@@ -50,8 +50,9 @@ SQSController.prototype.sendMessage = function(messageBody, done) {
         
         if (err)
             throw new Error(err);
-        else
+        else if(done) {
             done(data);
+        }
     });
 };
 
