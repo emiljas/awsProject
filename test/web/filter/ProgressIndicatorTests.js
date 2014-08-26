@@ -24,4 +24,25 @@ describe('ProgressIndicator', function() {
             done();
         }, 150);
     });
+
+    it('stop animation while processing is done', function(done) {
+        var animationWorking;
+        var indicator = new ProgressIndicator({
+            waitForProcessingMessage: 's',
+            animationInterval: 1,
+            loaderCharCount: 3
+        });
+        indicator.onAnimationChanged = function(animation) {
+            animationWorking = true;
+        };
+        indicator.waitForProcessing();
+        setTimeout(function() {
+            indicator.done();
+            animationWorking = false;
+            setTimeout(function() {
+                expect(animationWorking).to.equal(false);
+                done();
+            }, 5);
+        }, 5);
+    });
 });

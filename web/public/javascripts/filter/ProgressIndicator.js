@@ -4,7 +4,7 @@ function ProgressIndicator(options) {
 
 ProgressIndicator.prototype.waitForProcessing = function() {
     this.loaderCharCounter = 0;
-    setInterval(function(self) { 
+    this.waitIntervalId = setInterval(function(self) { 
         self.waitForProcessingStep(); 
     }, this.options.animationInterval, this);
 };
@@ -19,6 +19,10 @@ ProgressIndicator.prototype.waitForProcessingStep = function() {
 
     var isLastLoaderChar = this.loaderCharCounter === this.options.loaderCharCount - 1;
     this.loaderCharCounter = isLastLoaderChar ? 0 : ++this.loaderCharCounter;
+};
+
+ProgressIndicator.prototype.done = function() {
+    clearInterval(this.waitIntervalId);
 };
 
 module.exports = ProgressIndicator;
