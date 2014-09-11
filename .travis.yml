@@ -1,7 +1,6 @@
 language: node_js
 node_js:
 - '0.10'
-before_install: sudo ./linuxScripts/startup
 deploy:
   provider: s3
   access_key_id: AKIAIQY46GMUAWVNAXGA

@@ -1,5 +1,14 @@
 #!/bin/bash
 
+apt-get -y install npm
+#npm install
+npm install -g grunt-cli
+apt-get -y install s3cmd
+apt-get -y install nodejs-legacy
+apt-get -y install graphicsmagick
+apt-get -y install imagemagick
+grunt browserify
+
 AWS_ACCESS_KEY=$1
 AWS_SECRET_KEY=$2
 touch .s3cfg
@@ -22,12 +31,3 @@ for file in $(find -name "*-template"); do
 done
 
 rm /tmp/config
-
-apt-get -y install npm
-npm install
-npm install -g grunt-cli
-apt-get -y install s3cmd
-apt-get -y install nodejs-legacy
-apt-get -y install graphicsmagick
-apt-get -y install imagemagick
-grunt browserify
