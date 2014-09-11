@@ -16,11 +16,8 @@ while read line; do
 done </tmp/config
 
 for file in $(find -name "*-template"); do
-	#BASENAME="${file%.[^.]*}"
 	dirname="${basename%/[^/]*}"
-	FILENAME="${basename:${#dirname} + 1}"
-	#EXT="${file##*\.}"
-	
+	filename="${basename:${#dirname} + 1}"
 	mv "$file" "${dirname}/${filename}.js"
 done
 
