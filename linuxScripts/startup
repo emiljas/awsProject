@@ -1,39 +1,31 @@
 #!/bin/bash
 
-#sudo ./linuxScripts/startup AKIAIQY46GMUAWVNAXGA 9Jzg5d5BqEI/GDyAcGWc7BDFTOPGehVJvS3o2dC7
-
-<<SET_S3_CONFIG
 AWS_ACCESS_KEY=$1
 AWS_SECRET_KEY=$2
 touch .s3cfg
 sed --in-place "s/access_key/access_key = $AWS_ACCESS_KEY/" .s3cfg
 sed --in-place "s|secret_key|secret_key = $AWS_SECRET_KEY|" .s3cfg
-SET_S3_CONFIG
 
 s3cmd -c .s3cfg get s3://emil-project/config/config /tmp/config
-#cat /tmp/config
 
 while read line; do
-	#echo $line
-
-
-
 	IFS=':' read -ra config <<< "$line"
-	find -name 'aws-s3-config.js-template' -exec sed -i 's/${config[0]}/${config[1]}/g' {} +
+	echo ${config[0]}
+	echo ${config[1]}
+	find -name '*.js-template' -exec sed -i 's/${config[0]}/${config[1]}/g' {} +
 done </tmp/config
 
-for FILE in $(find -name "*-template"); do
-	BASENAME="${FILE%.[^.]*}"
-	DIRNAME="${BASENAME%/[^/]*}"
-	FILENAME="${BASENAME:${#DIRNAME} + 1}"
-	EXT="${FILE##*\.}"
+for file in $(find -name "*-template"); do
+	#BASENAME="${file%.[^.]*}"
+	dirname="${basename%/[^/]*}"
+	FILENAME="${basename:${#dirname} + 1}"
+	#EXT="${file##*\.}"
 	
-	mv FILE ${DIRNAME}/${FILENAME}.jsTemp
+	mv "$file" "${dirname}/${filename}.js"
 done
 
 rm /tmp/config
 
-<<INSTALL
 apt-get -y install npm
 npm install
 npm install -g grunt-cli
@@ -42,4 +34,3 @@ apt-get -y install nodejs-legacy
 apt-get -y install graphicsmagick
 apt-get -y install imagemagick
 grunt browserify
-INSTALL
