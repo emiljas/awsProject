@@ -1,8 +1,11 @@
 #!/bin/bash
 
-npm install
 apt-get -y install npm
+npm install
+npm install -g grunt-cli
+apt-get -y install s3cmd
+apt-get -y install nodejs-legacy
 apt-get -y install graphicsmagick
 apt-get -y install imagemagick
-apt-get -y install grunt-cli
+apt-get -y install grunt
 grunt browserify
