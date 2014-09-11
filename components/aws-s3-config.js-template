@@ -1,4 +1,4 @@
-module.export = {
+module.exports = {
 	"accessKeyId": "AMAZON_ACCESS_KEY_ID",
  	"secretAccessKey": "AMAZON_SECRET_ACCESS_KEY"
 };
