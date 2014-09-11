@@ -2,3 +2,13 @@ language: node_js
 node_js:
 - '0.10'
 before_install: npm install
+deploy:
+  provider: s3
+  access_key_id: AKIAIQY46GMUAWVNAXGA
+  secret_access_key:
+    secure: Jojyv22NUR0aKeqM4ZhEvwcGuzCGoLBo19ZFF0QHge1AJVZo4quumD/Ie+R3ffOyGNYe2M8Q3yplKEOk9IveqBwUTH1Hzj/fUP9cnUIfFenDGg/95AJWisrsZa0KQPW5vbJeqJM2RF9AemoP8gnrxM1bHPQDxU16cmEqeTNNYTY=
+  bucket: emil-project
+  upload-dir: deploy
+  acl: !ruby/string:HighLine::String private
+  on:
+    repo: emiljas/awsProject
