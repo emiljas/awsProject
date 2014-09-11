@@ -1,7 +1,7 @@
 var oauthConfig = {
     google: {
-        clientID: "FILL_IN",
-        clientSecret: "FILL_IN",
+        clientID: "GOOGLE_OAUTH_CLIENT_ID",
+        clientSecret: "GOOGLE_OAUTH_CLIENT_SECRET",
         callbackURL: "host/auth/google/callback"
     }
 };
